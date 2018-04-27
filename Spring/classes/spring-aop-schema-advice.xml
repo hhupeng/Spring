@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+		<!-- 切面类 -->
+		<bean id = "moocAspect" class="com.imooc.aop.schema.advice.MoocAspect"></bean>
+		<!-- 切面作用类 -->
+		<bean id = "aspectBiz" class="com.imooc.aop.schema.advice.Biz.AspectBiz"></bean>
+		
+		<!-- 指定作用关系 -->
+	    <aop:config>
+	    	<aop:aspect id = "moocAspectAop" ref = "moocAspect"> <!-- 切面 -->
+	    		<aop:pointcut expression="execution(* com.imooc.aop.schema.advice.Biz.AspectBiz.*())" id="moocPointcut"/> <!-- 切面作用域 -->
+	    		<aop:before method="before" pointcut-ref="moocPointcut"/>
+	    		<aop:after method="after" pointcut-ref="moocPointcut"/> <!-- 最后执行 -->
+	    		<aop:after-returning method="after" pointcut-ref="moocPointcut"/> <!-- 在after之前执行-->
+	    		<aop:after-throwing method="after" pointcut-ref="moocPointcut"/><!-- 在after之前执行-->
+	    		<aop:around method="around" pointcut-ref="moocPointcut"/>
+	    		
+	    		<aop:around method="aroundInit" pointcut="execution(* com.imooc.aop.schema.advice.Biz.AspectBiz.aroundInit(String,int))
+	    		and args(bizName,times)"/>
+	    		
+	    		<!-- 作用于类 -->
+	    		<aop:declare-parents types-matching="com.imooc.aop.schema.advice.Biz.*(+)" 
+	    		implement-interface="com.imooc.aop.schema.advice.Fit" 
+	    		default-impl="com.imooc.aop.schema.advice.FitImpl"/>
+	    	</aop:aspect>
+	    </aop:config>
+	    
+	
+ </beans>
